@@ -1,0 +1,67 @@
+version: '3'
+
+volumes:
+  agol_local_postgres_data: {}
+  agol_local_postgres_data_backups: {}
+
+services:
+  django:
+    build:
+      context: .
+      dockerfile: ./compose/local/django/Dockerfile
+    image: agol_local_django
+    container_name: agol_local_django
+    platform: linux/x86_64
+    depends_on:
+      - postgres
+    volumes:
+      - .:/app:z
+    env_file:
+      - ./.envs/.local/.django
+      - ./.envs/.local/.postgres
+    ports:
+      - "8000:8000"
+    command: /start
+
+  postgres:
+    build:
+      context: .
+      dockerfile: ./compose/production/postgres/Dockerfile
+    image: agol_production_postgres
+    container_name: agol_local_postgres
+    volumes:
+      - agol_local_postgres_data:/var/lib/postgresql/data:Z
+      - agol_local_postgres_data_backups:/backups:z
+    env_file:
+      - ./.envs/.local/.postgres
+
+  docs:
+    image: agol_local_docs
+    container_name: agol_local_docs
+    platform: linux/x86_64
+    build:
+      context: .
+      dockerfile: ./compose/local/docs/Dockerfile
+    env_file:
+      - ./.envs/.local/.django
+    volumes:
+      - ./docs:/docs:z
+      - ./config:/app/config:z
+      - ./agol:/app/agol:z
+    ports:
+      - "9000:9000"
+    command: /start-docs
+
+  ops_front:
+    container_name: ops_front
+    restart: always
+    build:  
+      context: ./ops_front
+      dockerfile: Dockerfile
+    image: ops_front_image
+    depends_on:
+      - django
+    volumes:
+      - ./ops_front/nginx:/etc/nginx/conf.d
+    ports:
+      - 81:80

@@ -1,0 +1,3 @@
+Daniel Roy Greenfeld
+docker-compose -f local.yml up -d --build
+docker exec -it 3e389e30aa96 /bin/bash
