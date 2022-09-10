@@ -35,7 +35,7 @@ export default function useSafetyInspectionForm() {
     const link = document.createElement("a");
     link.href = url;
 
-    link.setAttribute("download");
+    // link.setAttribute("download");
     document.body.appendChild(link);
     link.click();
     link.remove();
