@@ -1,6 +1,6 @@
 <template>
   <div id="nav">
-    <router-link to="/orderscan">Scan Order</router-link> 
+    <router-link to="/orderscan">Scan Order</router-link> |
     <router-link to="/">Home</router-link> |
     <router-link to="/safety-inspection">Safety Inspection</router-link> |
     <router-link to="/print-safety">Print Safety Inspection</router-link> |
