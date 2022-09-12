@@ -69,6 +69,6 @@ class Command(BaseCommand):
             quantity = random.randint(2215, 554544)
             BulkOrder.objects.create(customer=customer, quantity=quantity)
         
-        for _ in range(8):
-            question_desc = fake.sentence()
-            SafetyChecklistQuestion.objects.create(question_desc=question_desc)
+        # for _ in range(8):
+        #     question_desc = fake.sentence()
+        #     SafetyChecklistQuestion.objects.create(question_desc=question_desc)

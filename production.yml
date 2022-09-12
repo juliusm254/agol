@@ -46,6 +46,21 @@ services:
 
   redis:
     image: redis:6
+  
+  ops_front:
+    container_name: ops_front
+    restart: always
+    build:  
+      context: ./ops_front
+      dockerfile: Dockerfile
+    image: ops_front_image
+    depends_on:
+      - django
+    volumes:
+      - ./ops_front/nginx:/etc/nginx/conf.d
+    ports:
+      - 80
+
 
   awscli:
     build:
