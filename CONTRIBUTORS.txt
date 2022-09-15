@@ -1,4 +1,5 @@
 Daniel Roy Greenfeld
-docker-compose -f local.yml up -d --build
-docker exec -it 3e389e30aa96 /bin/bash
+docker-compose -f production.yml up -d --build
+docker exec -it d8875ce52100  /bin/bash
 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
+docker run -it 6c7e0546543b bash

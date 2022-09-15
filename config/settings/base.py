@@ -56,8 +56,9 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 
 CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:3333",
+    "http://127.0.0.1:81",
     "http://localhost:81"]
+
 
 CORS_ALLOW_HEADERS = list(default_headers) + [
     'contenttype',
@@ -86,7 +87,7 @@ THIRD_PARTY_APPS = [
     'rest_framework.authtoken',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',    
-    "corsheaders",
+    "corsheaders"
 ]
     
 
@@ -143,9 +144,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#middleware
 MIDDLEWARE = [
-    "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
     "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",    
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",

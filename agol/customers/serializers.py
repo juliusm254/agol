@@ -1,6 +1,3 @@
-from asyncore import read
-from attr import fields
-from django.forms import CharField
 from rest_framework import serializers
 from customers.models import (BulkOrder, 
                     Order, 

@@ -29,7 +29,7 @@
 # #Provide different values for airline,source,destination,no_of_passengers and test your program
 # print(generate_ticket("AI","Bangalore","London",7))
 
-from email.policy import default
+# from email.policy import default
 from django.db.models import Prefetch, Count, Q
 from django.contrib.auth import authenticate
 from rest_framework.permissions import IsAuthenticated

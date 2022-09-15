@@ -2,6 +2,7 @@ FROM node:lts-alpine as build
 WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json ./
+RUN npm install -g npm@8.19.1
 RUN npm i --silent
 COPY . ./
 

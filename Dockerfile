@@ -10,6 +10,7 @@ FROM python as python-build-stage
 
 ARG BUILD_ENVIRONMENT=production
 
+
 # Install apt packages
 RUN apt-get update && apt-get install --no-install-recommends -y \
   # dependencies for building Python packages
@@ -37,8 +38,11 @@ ENV BUILD_ENV ${BUILD_ENVIRONMENT}
 
 WORKDIR ${APP_HOME}
 
+
+
 RUN addgroup --system django \
     && adduser --system --ingroup django django
+
 
 
 # Install required system dependencies
@@ -47,6 +51,8 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   libpq-dev \
   # Translations dependencies
   gettext \
+  nginx \ 
+	bash \
   # cleaning up unused files
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && rm -rf /var/lib/apt/lists/*
@@ -60,14 +66,20 @@ RUN pip install --no-cache-dir --no-index --find-links=/wheels/ /wheels/* \
   && rm -rf /wheels/
 
 
-COPY --chown=django:django ./compose/production/django/entrypoint /entrypoint
+COPY --chown=django:django ./entrypoint /entrypoint
 RUN sed -i 's/\r$//g' /entrypoint
 RUN chmod +x /entrypoint
 
 
-COPY --chown=django:django ./compose/production/django/start /start
-RUN sed -i 's/\r$//g' /start
-RUN chmod +x /start
+COPY --chown=django:django ./start.sh /start.sh
+RUN sed -i 's/\r$//g' /start.sh
+RUN chmod +x /start.sh
+
+#my shit for start script
+
+ENV TINI_VERSION v0.19.0
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-static /tini
+RUN chmod +x /tini
 
 
 # copy application code to WORKDIR
@@ -78,4 +90,12 @@ RUN chown django:django ${APP_HOME}
 
 USER django
 
-ENTRYPOINT ["/entrypoint"]
+# ENTRYPOINT ["/entrypoint"]
+
+ENTRYPOINT ["/tini", "--", "/entrypoint" ,"--",  "./start.sh" ]
+
+# FROM traefik:v2.2.11
+# RUN mkdir -p /etc/traefik/acme \
+#   && touch /etc/traefik/acme/acme.json \
+#   && chmod 600 /etc/traefik/acme/acme.json
+# COPY ./compose/production/traefik/traefik.yml /etc/traefik

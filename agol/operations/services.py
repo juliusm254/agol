@@ -1,4 +1,3 @@
-from typing import List
 from operations.models import Order, SafetyChecklist, SafetyChecklistQuestion, Labinspection, LabResultsDecision, Loading
 from django.shortcuts import get_object_or_404
 
