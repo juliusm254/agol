@@ -43,15 +43,15 @@ END
 
 >&2 echo 'PostgreSQL is available' &
 
+exec "$@"
 
 
+# nginx -c "$PWD/nginx.conf" &
 
-nginx -c "$PWD/nginx.conf" &
+# # Apply database migrations
+# echo "Apply database migrations"
+# python manage.py migrate
 
-# Apply database migrations
-echo "Apply database migrations"
-python manage.py migrate &
-
-python /app/manage.py collectstatic --noinput &
-/usr/local/bin/gunicorn config.wsgi --bind 0.0.0.0:8000 --chdir=/app
-wait -n
+# python /app/manage.py collectstatic --noinput &
+# /usr/local/bin/gunicorn config.wsgi --bind 0.0.0.0:8000 --chdir=/app
+# wait -n

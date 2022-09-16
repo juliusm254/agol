@@ -71,9 +71,9 @@ RUN sed -i 's/\r$//g' /entrypoint
 RUN chmod +x /entrypoint
 
 
-COPY --chown=django:django ./start.sh /start.sh
-RUN sed -i 's/\r$//g' /start.sh
-RUN chmod +x /start.sh
+COPY --chown=django:django ./start /start
+RUN sed -i 's/\r$//g' /start
+RUN chmod +x /start
 
 #my shit for start script
 
@@ -81,18 +81,18 @@ ENV TINI_VERSION v0.19.0
 ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-static /tini
 RUN chmod +x /tini
 
-
 # copy application code to WORKDIR
 COPY --chown=django:django . ${APP_HOME}
 
 # make django owner of the WORKDIR directory as well.
 RUN chown django:django ${APP_HOME}
 
+
 USER django
 
 # ENTRYPOINT ["/entrypoint"]
 
-ENTRYPOINT ["/tini", "--", "/entrypoint" ,"--",  "./start.sh" ]
+ENTRYPOINT ["/tini", "--", "/entrypoint", "--", "/start"]
 
 # FROM traefik:v2.2.11
 # RUN mkdir -p /etc/traefik/acme \
