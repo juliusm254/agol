@@ -70,6 +70,10 @@ COPY --chown=django:django ./entrypoint /entrypoint
 RUN sed -i 's/\r$//g' /entrypoint
 RUN chmod +x /entrypoint
 
+COPY --chown=django:django ./nginx.conf /etc/nginx/nginx.conf
+RUN sed -i 's/\r$//g' /etc/nginx/nginx.conf
+RUN chmod +x /etc/nginx/nginx.conf
+
 
 COPY --chown=django:django ./start /start
 RUN sed -i 's/\r$//g' /start
