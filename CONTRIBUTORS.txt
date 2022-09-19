@@ -1,5 +1,6 @@
 Daniel Roy Greenfeld
 docker-compose -f production.yml up -d --build
-docker exec -it 6a9e395cb008   /bin/bash
+docker exec -it 932b1112e30b   /bin/bash
 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
 docker run -it 6c7e0546543b bash
+psql --host=postgres --username=postgres --dbname=agol
