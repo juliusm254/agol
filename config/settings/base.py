@@ -56,8 +56,10 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 
 CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1",
-    "http://localhost"]
+    "http://127.0.0.1:80",
+    "http://127.0.0.1:8080",
+    "http://localhost:8080"
+    "http://localhost:80"]
 
 
 CORS_ALLOW_HEADERS = list(default_headers) + [
@@ -75,12 +77,6 @@ DJANGO_APPS = [
     # "django.contrib.humanize", # Handy template tags
     "django.contrib.admin",
     "django.forms",
-
-    #  DJANGO DEBUG TOOL BAR SETTING
-    "debug_toolbar",
-    'faker',
-
-
 ]
 THIRD_PARTY_APPS = [
     "crispy_forms",
