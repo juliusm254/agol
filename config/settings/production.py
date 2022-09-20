@@ -11,9 +11,20 @@ ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=[ '127.0.0.1', 'localho
 # DATABASES
 # ------------------------------------------------------------------------------
 DATABASES["default"] = env.db("DATABASE_URL")  # noqa F405
-DATABASES["default"]["ATOMIC_REQUESTS"] = True  # noqa F405
+# DATABASES["default"]["ATOMIC_REQUESTS"] = True  # noqa F405
 DATABASES["default"]["CONN_MAX_AGE"] = env.int("CONN_MAX_AGE", default=60)  # noqa F405
 
+DATABASES = {
+    "default": {
+        "ENGINE": env("POSTGRES_ENG"),
+        'NAME' : env('POSTGRES_DB'),
+        'USER': env('POSTGRES_USER'),
+        'PASSWORD': env('POSTGRES_PASSWORD'),
+        'HOST': env('POSTGRES_HOST'),
+        'PORT': env('POSTGRES_PORT')
+    }
+
+}
 # CACHES
 # ------------------------------------------------------------------------------
 CACHES = {
