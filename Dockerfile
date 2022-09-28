@@ -70,9 +70,12 @@ COPY --chown=django:django ./entrypoint /entrypoint
 RUN sed -i 's/\r$//g' /entrypoint
 RUN chmod +x /entrypoint
 
-COPY --chown=django:django ./nginx.conf /etc/nginx/nginx.conf
+COPY --chown=django:django ./nginx.conf /etc/nginx/conf.d/configfile.template
+
+ADD nginx.conf /etc/nginx/nginx.conf
 RUN sed -i 's/\r$//g' /etc/nginx/nginx.conf
 RUN chmod +x /etc/nginx/nginx.conf
+RUN chown django: /var/log/nginx/error.log
 
 
 COPY --chown=django:django ./start /start
@@ -83,6 +86,8 @@ RUN chmod +x /start
 
 ENV TINI_VERSION v0.19.0
 ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-static /tini
+# COPY --chown=django:django ./usr/bin/tini /etc/nginx/nginx.conf
+RUN chown django: /tini
 RUN chmod +x /tini
 
 # copy application code to WORKDIR
@@ -95,6 +100,7 @@ RUN chown django:django ${APP_HOME}
 USER django
 
 # ENTRYPOINT ["/entrypoint"]
+ENV PORT 8080
 
 ENTRYPOINT ["/tini", "--"]
 
@@ -105,4 +111,4 @@ ENTRYPOINT ["/tini", "--"]
 #   && touch /etc/traefik/acme/acme.json \
 #   && chmod 600 /etc/traefik/acme/acme.json
 # COPY ./compose/production/traefik/traefik.yml /etc/traefik
-CMD [ "/entrypoint", "/start" ]
+CMD [ "start", "./start","envsubst '\$PORT' < /etc/nginx/conf.d/configfile.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]

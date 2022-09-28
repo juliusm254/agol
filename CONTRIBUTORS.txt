@@ -3,4 +3,4 @@ docker-compose -f production.yml up -d --build
 docker exec -it 64a8f754fe3f   /bin/bash
 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
 docker run -it 6c7e0546543b bash
-docker commit --change='CMD ["/entrypoint", "/start"]' -c "EXPOSE 8000" 1861676db7cb  gechcode/agol-django-faker:c1do
+docker commit --change='CMD ["/start"]' -c "EXPOSE 8000" aa915e50bb81  gechcode/agol-django-faker:c1
