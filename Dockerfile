@@ -1,5 +1,20 @@
 ARG PYTHON_VERSION=3.9-slim-bullseye
 
+FROM node:lts-alpine as vue-build
+WORKDIR /app
+ENV PATH /ops_front/node_modules/.bin:$PATH
+COPY /ops_front/package.json ./
+RUN npm i --silent
+COPY /ops_front ./
+
+RUN npm run build
+
+# FROM nginx:alpine
+# COPY nginx.conf /etc/nginx/conf.d/configfile.template
+
+
+
+
 
 
 # define an alias for the specfic python version used in this file.
@@ -70,9 +85,12 @@ COPY --chown=django:django ./entrypoint /entrypoint
 RUN sed -i 's/\r$//g' /entrypoint
 RUN chmod +x /entrypoint
 
-COPY --chown=django:django ./nginx.conf /etc/nginx/nginx.conf
+COPY --chown=django:django ./nginx.conf /etc/nginx/conf.d/configfile.template
+
+ADD nginx.conf /etc/nginx/nginx.conf
 RUN sed -i 's/\r$//g' /etc/nginx/nginx.conf
 RUN chmod +x /etc/nginx/nginx.conf
+RUN chown django: /var/log/nginx/error.log
 
 
 COPY --chown=django:django ./start /start
@@ -83,23 +101,32 @@ RUN chmod +x /start
 
 ENV TINI_VERSION v0.19.0
 ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-static /tini
+# COPY --chown=django:django ./usr/bin/tini /etc/nginx/nginx.conf
+RUN chown django: /tini
 RUN chmod +x /tini
 
 # copy application code to WORKDIR
 COPY --chown=django:django . ${APP_HOME}
 
+COPY --from=vue-build app/dist /usr/share/nginx/html
+# COPY --from=vue-build app/dist /usr/share/nginx/html
 # make django owner of the WORKDIR directory as well.
 RUN chown django:django ${APP_HOME}
 
 
 USER django
 
-# ENTRYPOINT ["/entrypoint"]
+# # ENTRYPOINT ["/entrypoint"]
+# ENV PORT 80
 
-ENTRYPOINT ["/tini", "--", "/entrypoint", "--", "/start"]
+ENTRYPOINT ["/tini", "--"]
 
+# CMD [ "/entrypoint", "/start" ]
+CMD [ "start", "./start","envsubst '\$PORT' < /etc/nginx/conf.d/configfile.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]
 # FROM traefik:v2.2.11
 # RUN mkdir -p /etc/traefik/acme \
 #   && touch /etc/traefik/acme/acme.json \
 #   && chmod 600 /etc/traefik/acme/acme.json
 # COPY ./compose/production/traefik/traefik.yml /etc/traefik
+# CMD [ "start", "./start","envsubst '\$PORT' < /etc/nginx/conf.d/configfile.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]
+# CMD ["entrypoint", "/start"]

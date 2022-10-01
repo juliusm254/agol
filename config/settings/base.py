@@ -56,6 +56,7 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 
 CORS_ALLOWED_ORIGINS = [
+    "https://agol-bvtwuypbsq-km.a.run.app",
     "http://127.0.0.1",
     "http://localhost"]
 

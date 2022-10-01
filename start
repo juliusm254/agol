@@ -3,13 +3,20 @@
 
 
 set -e
+# sed -i -e "s/\$NGINX_PORT/${PORT}/g" /etc/nginx/nginx.conf
 
-nginx -c "$PWD/nginx.conf" &
+# sed -i "s/\$NGINX_PORT/${PORT}/g" /etc/nginx/nginx.conf
+
+# nginx -c "$PWD/nginx.conf" &
+# sed -i "s/\$NGINX_PORT/${PORT}/g" /etc/nginx/nginx.conf > tmp; cat tmp > /etc/nginx/nginx.conf; rm tmp &
+
+
 
 # Apply database migrations
-echo "Apply database migrations"
-# python manage.py migrate
+# echo "Apply database migrations"
+# python manage.py makemigrations &
 
+# python manage.py migrate &
 # python /app/manage.py collectstatic --noinput &
 /usr/local/bin/gunicorn config.wsgi --bind 0.0.0.0:8000 --chdir=/app
 wait -n
